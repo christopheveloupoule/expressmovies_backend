@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 
-const PORT = 3001;
+const PORT = 3002;
 
 //Chemin pour y accéder au fichier static (css)
 app.use('/public' , express.static('public'))

@@ -17,4 +17,6 @@ Par exemple on crée, movie detail.ejs ...
 * Passer des données de l'appli JS à une vue (movie-details):
 On passe un 2eme param à la méthode render de app.get('/movies/:id'...
 
+* Gestion des partials (footer header)
+
 
