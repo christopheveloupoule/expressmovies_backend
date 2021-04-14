@@ -19,4 +19,6 @@ On passe un 2eme param à la méthode render de app.get('/movies/:id'...
 
 * Gestion des partials (footer header)
 
+* Gestion de l'envoi de fichier statique (on applique simplement une classe CSS separation avec le footer)
+
 
