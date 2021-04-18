@@ -4,18 +4,22 @@ const bodyParser = require('body-parser');
 const multer = require('multer');
 const upload = multer();
 
-const jwt = require('jsonwebtoken')
+const jwt = require('jsonwebtoken');
+const expressJwt = require('express-jwt');
 
-
-const PORT = 3003;
+const PORT = 3009;
 let frenchMovies = [];
+
+//Chemin pour y accéder au fichier static (css)
+app.use('/public' , express.static('public'));
+
+const secret = 'qsdjS12ozehdoIJ123DJOZJLDSCqsdeffdg123ER56SDFZedhWXojqshduzaohduihqsDAqsdq';
+
+app.use(expressJwt({ secret: secret, algorithms: ['HS256']}).unless({ path: ['/', '/movies', '/movie-search', '/login']}));
 
 //Conf à faire pr utiliser notre template "engine"
 app.set('views', './views');
 app.set('view engine', 'ejs');
-
-//Chemin pour y accéder au fichier static (css)
-app.use('/public' , express.static('public'))
 
 app.get('/', (req, res) => {
     res.render('index');
@@ -92,7 +96,6 @@ app.get('/login', (req, res) => {
 });
 
 const fakeUser = { email: 'testuser@testmail.fr', password: '123456789' };
-const secret = 'qsdjS12ozehdoIJ123DJOZJLDSCqsdeffdg123ER56SDFZedhWXojqshduzaohduihqsDAqsdq';
 
 app.post('/login', urlencodedParser, (req, res) => {
     console.log('login post', req.body);
@@ -116,6 +119,10 @@ app.post('/login', urlencodedParser, (req, res) => {
     } 
 });
 
+app.get('/member-only',(req, res) => {
+    console.log('req.user', req.user);
+    res.send(req.user);
+});
 
 app.listen(PORT, () => {
     console.log(`listening on port ${PORT}`);

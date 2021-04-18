@@ -25,6 +25,12 @@
 			<br>
 			<div id="profile" style="display:none">
                 <button id="disconnectBtn">déconnexion</button>
+				<button id="display-payload">voir le payload</button>
+				<div id="decoded-payload"></div>
+				<div>
+                    <a href="#" id="member-only">espace membre</a>
+                    <div id="member-data"></div>
+                </div>
             </div>
 		</div>
 
@@ -38,8 +44,14 @@
 			var loginArea = document.querySelector('#login');
             var profileArea = document.querySelector('#profile');
 
+			var displayPayloadBtn = document.querySelector('#display-payload');
+            displayPayloadBtn.addEventListener('click', displayPayload);
+
 			var disconnectBtn = document.querySelector('#disconnectBtn');
 			disconnectBtn.addEventListener('click', disconnect);
+
+			var memberOnlyLink = document.querySelector('#member-only');
+            memberOnlyLink.addEventListener('click', makeRequestWithToken);
 
 			var connectionLinkArea = document.querySelector('#connectionLink');
 			handleFormDisplay();
@@ -78,7 +90,7 @@
                     switchToLoggedOutMode();
                 }
             }
-			
+
 			function switchToLoggedinMode() {
                 loginArea.style.display = 'none';
                 profileArea.style.display = 'block';
@@ -90,10 +102,51 @@
 				connectionLinkArea.innerHTML = '<a href="/login">connexion</a>'; 
             }
 
+			function displayPayload() {
+                var payload = parseJwt();
+                var decodedPayloadDiv = document.querySelector('#decoded-payload');
+                decodedPayloadDiv.innerHTML = '<pre>' + JSON.stringify(payload) + '</pre>';
+            }
+
+
+			function parseJwt () { 
+                var tokenFromStorage = localStorage.getItem('token');            
+                console.log('parseJwt tokenFromStorage', tokenFromStorage);
+                if(tokenFromStorage) { //si token recuperer
+                    var base64Payload = tokenFromStorage.split('.')[1];                
+                    return JSON.parse(window.atob(base64Payload));
+                } else { //si le token est non recuperer
+                    return 'no token to parse';
+                }          
+            };
+
 			function disconnect() {
                 switchToLoggedOutMode();
                 localStorage.removeItem('token');
             }
+
+			function makeRequestWithToken(evt) {
+                evt.preventDefault();
+               // console.log('makeRequestWithToken');
+                var page = this.id;
+                var tokenFromStorage = localStorage.getItem('token');   
+                var config = {};
+				
+                if(tokenFromStorage) {
+                    config.headers =  {'Authorization': "Bearer " + JSON.parse(tokenFromStorage)}
+                }
+                
+                axios.get( 
+                    'http://localhost:3000/' + page,
+                    config
+                ).then((res) => {
+                    console.log('success');
+                    console.log(res);  
+                })
+                .catch(err => {
+                    console.error('makeRequestWithToken err', err);
+                });
+			}
 
 		</script>
 	</body>

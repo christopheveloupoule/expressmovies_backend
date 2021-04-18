@@ -90,6 +90,20 @@ var connectionLinkArea = document.querySelector ('#connectionLink');
 
 VI.JSON WEB TOKEN (JWT) - 2eme partie:
 
+* Decoder un JWT:
+Méthod native de JS pr décoder décoder notre payload
+function displayPayload | function parseJwt 
+
+* Protéger l'accès à certaines routes coté serveur:
+Utilisation d'un middleware: npm install express-jwt --save
+Method unless pour ne pas protéger la page login d'un token (doc)
+
+* Ajouter un 'Authorization' header
+
+* Ajouter un 'Authorization' header depuis notre code:
+Utilisation de axios
+On va rajouter une ressource qui sera elle protégée.(member-only)
+
 
 
 
